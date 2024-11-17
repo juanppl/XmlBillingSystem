@@ -1,12 +1,23 @@
-﻿namespace XmlBillingSystem.BillDbContext.Models
+﻿using System.Xml.Serialization;
+
+namespace XmlBillingSystem.BillDbContext.Models
 {
     public class Bill
     {
-        public int BillId { get; set; }
+        [XmlAttribute("billId")]
+        public string BillId { get; set; }
+
+        [XmlAttribute("date")]
         public DateTime Date { get; set; }
+
+        [XmlAttribute("referenceNumber")]
         public string ReferenceNumber { get; set; }
-        public int CustomerId { get; set; }
-        public Customer Customer { get; set; }
-        public ICollection<BillItems> BillItems { get; set; }
+
+        [XmlElement("TotalAmount")]
+        public decimal TotalAmount { get; set; }
+
+        [XmlArray("BillItems")]
+        [XmlArrayItem("BillItem")]
+        public List<BillItem> BillItems { get; set; }
     }
 }
