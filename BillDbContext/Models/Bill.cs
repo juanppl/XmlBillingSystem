@@ -5,7 +5,7 @@ namespace XmlBillingSystem.BillDbContext.Models
     public class Bill
     {
         [XmlAttribute("billId")]
-        public string BillId { get; set; }
+        public int BillId { get; set; }
 
         [XmlAttribute("date")]
         public DateTime Date { get; set; }
@@ -19,5 +19,11 @@ namespace XmlBillingSystem.BillDbContext.Models
         [XmlArray("BillItems")]
         [XmlArrayItem("BillItem")]
         public List<BillItem> BillItems { get; set; }
+
+        [XmlIgnore]
+        public virtual Customer Customer { get; set; }
+
+        [XmlIgnore]
+        public int CustomerId { get; set; }
     }
 }

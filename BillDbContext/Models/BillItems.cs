@@ -4,6 +4,9 @@ namespace XmlBillingSystem.BillDbContext.Models
 {
     public class BillItem
     {
+        [XmlIgnore]
+        public int BillItemId { get; set; }
+
         [XmlElement("Quantity")]
         public int Quantity { get; set; }
 
@@ -17,9 +20,15 @@ namespace XmlBillingSystem.BillDbContext.Models
         public decimal Subtotal { get; set; }
 
         [XmlIgnore]
-        public string ProductId { get; set; }
+        public int ProductId { get; set; }
 
         [XmlElement("Product")]
         public Product Product { get; set; }
+
+        [XmlIgnore]
+        public Bill Bill { get; set; }
+
+        [XmlIgnore]
+        public int BillId { get; set; }
     }
 }

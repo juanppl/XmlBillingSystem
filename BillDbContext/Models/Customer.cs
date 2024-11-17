@@ -11,7 +11,7 @@ namespace XmlBillingSystem.BillDbContext.Models
     public class Customer
     {
         [XmlAttribute("customerId")]
-        public string CustomerId { get; set; }
+        public int CustomerId { get; set; }
 
         [XmlElement("Name")]
         public string Name { get; set; }

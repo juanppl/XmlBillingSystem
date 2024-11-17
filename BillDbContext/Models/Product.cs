@@ -11,7 +11,7 @@ namespace XmlBillingSystem.BillDbContext.Models
     public class Product
     {
         [XmlAttribute("productId")]
-        public string ProductId { get; set; }
+        public int ProductId { get; set; }
 
         [XmlElement("Name")]
         public string Name { get; set; }
@@ -32,9 +32,12 @@ namespace XmlBillingSystem.BillDbContext.Models
         public bool IsActive { get; set; }
 
         [XmlIgnore]
-        public string CategoryId { get; set; }
+        public int CategoryId { get; set; }
 
         [XmlElement("Category")]
         public Category Category { get; set; }
+
+        [XmlIgnore]
+        public virtual List<BillItem> BillItems { get; set; }
     }
 }

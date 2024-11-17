@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using System;
+using XmlBillingSystem.BillDbContext;
 using XmlBillingSystem.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,10 +21,17 @@ builder.Services.AddTransient<IBillingService, BillingService>();
 builder.Services.AddTransient<ICategoriesService, CategoriesService>();
 builder.Services.AddTransient<IProductsService, ProductsService>();
 
+builder.Services.AddDbContext<BillContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("AppDbContext"));
+});
+
 builder.Services.AddCors(c => c.AddPolicy("MainPolicy", b =>
 {
     b.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod();
 }));
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();
 

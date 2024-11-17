@@ -12,12 +12,15 @@ namespace XmlBillingSystem.BillDbContext.Models
     public class Category
     {
         [XmlAttribute("categoryId")]
-        public string CategoryId { get; set; }
+        public int CategoryId { get; set; }
 
         [XmlElement("Name")]
         public string Name { get; set; }
 
         [XmlElement("Description")]
         public string Description { get; set; }
+
+        [XmlIgnore]
+        public virtual ICollection<Product> Products { get; set; }
     }
 }
