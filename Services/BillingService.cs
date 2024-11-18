@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Xml.Serialization;
 using XmlBillingSystem.BillDbContext;
 using XmlBillingSystem.BillDbContext.Models;
+using XmlBillingSystem.Services.Dto;
 
 namespace XmlBillingSystem.Services
 {
@@ -13,6 +14,41 @@ namespace XmlBillingSystem.Services
         public BillingService(BillContext context)
         {
             _context = context;
+        }
+
+        public async Task CreateOrUpdateCustomer(CreateCustomerRequest customer)
+        {
+            if (customer.CustomerId != default)
+            {
+                var customerFound = await _context.Customer.FirstOrDefaultAsync(c => c.CustomerId == customer.CustomerId);
+                if (customerFound == null)
+                {
+                    throw new Exception($"Customer with id: {customer.CustomerId} not found");
+                }
+
+                customerFound.Name = customer.Name;
+                customerFound.LastName = customer.LastName;
+                customerFound.Email = customer.Email;
+                customerFound.Phone = customer.Phone;
+                customerFound.Address = customer.Address;
+
+                _context.Update(customerFound);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                var newCustomer = new Customer
+                {
+                    Name = customer.Name,
+                    LastName = customer.LastName,
+                    Email = customer.Email,
+                    Phone = customer.Phone,
+                    Address = customer.Address,
+                };
+
+                _context.Add(newCustomer);
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task<Customers> GetAllCustomers()

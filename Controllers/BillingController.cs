@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using XmlBillingSystem.BillDbContext.Models;
 using XmlBillingSystem.Services;
+using XmlBillingSystem.Services.Dto;
 
 namespace XmlBillingSystem.Controllers
 {
@@ -22,11 +23,18 @@ namespace XmlBillingSystem.Controllers
             return await _billingService.GetAllCustomers();
         }
 
-        [HttpGet("get-billing")]
-        [Produces("application/xml")]
-        public async Task<ActionResult> GetBilling([FromBody] Customer customer)
+        [HttpPost("add-or-edit-customer")]
+        [Consumes("application/xml")]
+        public async Task<IActionResult> CreateOrUpdateCustomer([FromBody] CreateCustomerRequest customer)
         {
-            return Ok();
+            if (customer == null)
+            {
+                return BadRequest("No se ha recibido un cliente válido.");
+            }
+
+            await _billingService.CreateOrUpdateCustomer(customer);
+
+            return Ok(customer);
         }
 
     }

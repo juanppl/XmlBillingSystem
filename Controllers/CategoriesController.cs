@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using XmlBillingSystem.BillDbContext.Models;
 using XmlBillingSystem.Services;
+using XmlBillingSystem.Services.Dto;
 
 namespace XmlBillingSystem.Controllers
 {
@@ -20,6 +21,20 @@ namespace XmlBillingSystem.Controllers
         public async Task<Categories> GetListOfCategories()
         {
             return await _categoriesService.GetListOfCategories();
+        }
+
+        [HttpPost("add-or-edit-category")]
+        [Consumes("application/xml")]
+        public async Task<IActionResult> CreateOrUpdateCategory([FromBody] CreateCategoryRequest category)
+        {
+            if (category == null)
+            {
+                return BadRequest("No se ha recibido una categoría válida.");
+            }
+
+            await _categoriesService.CreateOrUpdateCategory(category);
+
+            return Ok(category);
         }
     }
 }

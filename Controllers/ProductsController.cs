@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using XmlBillingSystem.BillDbContext.Models;
 using XmlBillingSystem.Services;
+using XmlBillingSystem.Services.Dto;
 
 namespace XmlBillingSystem.Controllers
 {
@@ -21,6 +22,21 @@ namespace XmlBillingSystem.Controllers
         {
             return await _productsService.GetListOfProducts();
         }
+
+        [HttpPost("add-or-edit-product")]
+        [Consumes("application/xml")]
+        public async Task<IActionResult> CreateOrUpdateProduct([FromBody] CreateProductRequest product)
+        {
+            if (product == null)
+            {
+                return BadRequest("No se ha recibido un producto válido.");
+            }
+
+            await _productsService.CreateOrUpdateProduct(product);
+
+            return Ok(product);
+        }
+
     }
 }
 

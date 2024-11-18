@@ -3,6 +3,7 @@ using System.Reflection.PortableExecutable;
 using System.Xml.Serialization;
 using XmlBillingSystem.BillDbContext;
 using XmlBillingSystem.BillDbContext.Models;
+using XmlBillingSystem.Services.Dto;
 
 namespace XmlBillingSystem.Services
 {
@@ -23,6 +24,31 @@ namespace XmlBillingSystem.Services
             }
 
             return new Categories { CategoryList = categories };
+        }
+
+        public async Task CreateOrUpdateCategory(CreateCategoryRequest category)
+        {
+            if (category.CategoryId != default)
+            {
+                var categoryFound = await _context.Category.FirstOrDefaultAsync(c => c.CategoryId == category.CategoryId);
+                if (categoryFound == null) {
+                    throw new Exception($"Category with id: {category.CategoryId} not found");
+                }
+                categoryFound.Name = category.Name;
+                categoryFound.Description = category.Description;
+                _context.Update(categoryFound);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                var newCategory = new Category {
+                    Name = category.Name,
+                    Description = category.Description,
+                };
+
+                _context.Add(newCategory);
+                await _context.SaveChangesAsync();
+            }
         }
 
         //public async Task<Categories> GetListOfCategories()
