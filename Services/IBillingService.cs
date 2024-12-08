@@ -10,5 +10,6 @@ namespace XmlBillingSystem.Services
     {
         Task<Customers> GetAllCustomers();
         Task CreateOrUpdateCustomer(CreateCustomerRequest customer);
+        Task CreateNewBill(CreateNewBillRequest createNewBillRequest);
     }
 }

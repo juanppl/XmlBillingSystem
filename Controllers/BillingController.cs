@@ -37,5 +37,13 @@ namespace XmlBillingSystem.Controllers
             return Ok(customer);
         }
 
+        [HttpPost("create-new-bill")]
+        [Consumes("application/xml")]
+        public async Task<IActionResult> CreateNewBill([FromBody] CreateNewBillRequest createNewBillRequest)
+        {
+            await _billingService.CreateNewBill(createNewBillRequest);
+            return Ok(createNewBillRequest);
+        }
+
     }
 }

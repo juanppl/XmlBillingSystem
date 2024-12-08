@@ -16,6 +16,38 @@ namespace XmlBillingSystem.Services
             _context = context;
         }
 
+        public async Task CreateNewBill(CreateNewBillRequest createNewBillRequest)
+        {
+            var bill = new Bill
+            {
+                Date = DateTime.Now,
+                ReferenceNumber = Guid.NewGuid().ToString(),
+                TotalAmount = (decimal) createNewBillRequest.Bills.Sum(b => b.BillItems.Sum(bi => bi.Price)),
+                CustomerId = createNewBillRequest.CustomerId
+            };
+            _context.Add(bill);
+            await _context.SaveChangesAsync();
+
+            foreach (var billToInsert in createNewBillRequest.Bills)
+            {
+                foreach (var billItem in billToInsert.BillItems)
+                {
+                    var billItemToInsert = new BillItem
+                    {
+                        BillId = bill.BillId,
+                        Price = billItem.Price,
+                        Quantity = billItem.Quantity,
+                        Stock = billItem.Stock,
+                        Subtotal = billItem.Subtotal,
+                        ProductId = billItem.Product.ProductId
+                    };
+                    _context.Add(billItemToInsert);
+                }
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
         public async Task CreateOrUpdateCustomer(CreateCustomerRequest customer)
         {
             if (customer.CustomerId != default)
